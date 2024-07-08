@@ -1,6 +1,10 @@
+
+const oracledb =require('oracledb');
+// Thick mode로 설정
+oracledb.initOracleClient({libDir:process.env.OCI_LIB_DIR});
+
 const cors =require('cors');
 const express = require('express');
-const oracledb =require('oracledb');
 const bcrypt =require('bcryptjs');
 const session=require('express-session');
 const RedisStore =require('connect-redis').default;
@@ -22,7 +26,7 @@ app.use(session({
     secret: '나중에 채워야할곳',
     resave: false,
     saveUninitialized:false,
-    cookie:{secure:false} //https 사용시 true로 하세요 지훈님-까먹지마세요
+    cookie:{secure:false} //https 사용시 true로 하세요 지훈-까먹지마시오
 }));
 
 async function getOracleConnection(){
@@ -34,6 +38,7 @@ async function getOracleConnection(){
         });
     }catch(err){
         console.error(err);
+        throw err; //연결 실패시 예외를 다시 던집니다.
     }
 }
 
