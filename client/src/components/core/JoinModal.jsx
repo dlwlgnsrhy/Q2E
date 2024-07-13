@@ -12,7 +12,7 @@ function JoinModal({ onJoinSuccess }) {
 
     const register = async () => {
         try {
-            const response = await axios.post('/register', { 
+            const response = await axios.post('http://localhost:5000/register', { 
                 username: registerUsername, 
                 password: registerPassword,
                 phone_number: registerPhoneNumber,
