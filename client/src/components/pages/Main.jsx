@@ -7,7 +7,7 @@ import MapView from '../../components/widgets/MapView';
 import '../../assets/scss/Main.scss';
 import { useNavigate } from 'react-router-dom';
 
-function Main() {
+function Main({ onLoginSuccess }) {
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
@@ -30,6 +30,7 @@ function Main() {
         setLoggedIn(true);
         setUsername(loggedInUsername);
         toggleLoginModal();
+        onLoginSuccess(loggedInUsername);
 
         // 도시 이름 설정 (예: 제주)
         const city = 'Jeju';
@@ -80,26 +81,43 @@ function Main() {
                 <source src="/videos/surfing.mp4" type="video/mp4" />
             </video>
             <div className="content">
-                <header>
-                    <nav>
-                        <ul style={{ listStyleType: 'none', display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-                            {loggedIn ? (
-                                <li style={{ margin: '0 10px', color: 'white' }}>
-                                    {`Welcome, ${username}`}
-                                </li>
-                            ) : (
-                                <>
-                                    <li style={{ margin: '0 10px' }}>
-                                        <button onClick={toggleJoinModal}>회원가입</button>
-                                    </li>
-                                    <li style={{ margin: '0 10px' }}>
-                                        <button onClick={toggleLoginModal}>로그인</button>
-                                    </li>
-                                </>
-                            )}
-                        </ul>
-                    </nav>
-                </header>
+                {!loggedIn && (
+                    <h1>Welcome to SurFun</h1>
+                )}
+
+                {loggedIn && (
+                    <>
+                        {error && (
+                            <p style={{ color: 'red' }}>{error}</p>
+                        )}
+
+                        {weatherData && (
+                            <WeatherDisplay weatherData={weatherData} />
+                        )}
+
+                        <div className="map-container">
+                            <MapView latitude={latitude} longitude={longitude} />
+                        </div>
+
+                        {/* 추가 콘텐츠 및 기능 */}
+                        <section>
+                            <h2>추천 서핑 포인트</h2>
+                            {/* 추천 서핑 포인트를 표시하는 컴포넌트 */}
+                        </section>
+                        <section>
+                            <h2>커뮤니티 활동</h2>
+                            {/* 커뮤니티 게시판을 표시하는 컴포넌트 */}
+                        </section>
+                        <section>
+                            <h2>서핑 교육 및 가이드</h2>
+                            {/* 서핑 강좌 및 안전 가이드를 표시하는 컴포넌트 */}
+                        </section>
+                        <section>
+                            <h2>최신 서핑 뉴스 및 정보</h2>
+                            {/* 최신 서핑 뉴스 및 정보를 표시하는 컴포넌트 */}
+                        </section>
+                    </>
+                )}
 
                 {isLoginModalOpen && (
                     <div style={{
@@ -151,44 +169,6 @@ function Main() {
                             />
                         </div>
                     </div>
-                )}
-
-                {!loggedIn && (
-                    <h1>Welcome to SurFun</h1>
-                )}
-
-                {loggedIn && (
-                    <>
-                        {error && (
-                            <p style={{ color: 'red' }}>{error}</p>
-                        )}
-
-                        {weatherData && (
-                            <WeatherDisplay weatherData={weatherData} />
-                        )}
-
-                        <div className="map-container">
-                            <MapView latitude={latitude} longitude={longitude} />
-                        </div>
-
-                        {/* 추가 콘텐츠 및 기능 */}
-                        <section>
-                            <h2>추천 서핑 포인트</h2>
-                            {/* 추천 서핑 포인트를 표시하는 컴포넌트 */}
-                        </section>
-                        <section>
-                            <h2>커뮤니티 활동</h2>
-                            {/* 커뮤니티 게시판을 표시하는 컴포넌트 */}
-                        </section>
-                        <section>
-                            <h2>서핑 교육 및 가이드</h2>
-                            {/* 서핑 강좌 및 안전 가이드를 표시하는 컴포넌트 */}
-                        </section>
-                        <section>
-                            <h2>최신 서핑 뉴스 및 정보</h2>
-                            {/* 최신 서핑 뉴스 및 정보를 표시하는 컴포넌트 */}
-                        </section>
-                    </>
                 )}
             </div>
         </div>
