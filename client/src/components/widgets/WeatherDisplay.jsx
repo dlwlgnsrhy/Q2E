@@ -1,10 +1,13 @@
 import React from 'react';
 
+// WeatherDisplay 컴포넌트: weatherData prop을 받아 현재 날씨를 표시
 function WeatherDisplay({ weatherData }) {
+    // weatherData가 없으면 로딩 메시지 표시
     if (!weatherData) {
         return <div>Loading...</div>;
     }
 
+    // weatherData에서 필요한 정보 추출
     const { name, main, weather } = weatherData;
     const iconUrl = `http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
 

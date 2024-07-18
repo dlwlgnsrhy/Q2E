@@ -6,26 +6,30 @@ import getWeatherData from '../../services/WeatherService';
 import MapView from '../../components/widgets/MapView';
 import '../../assets/scss/Main.scss';
 import { useNavigate } from 'react-router-dom';
+import Favorites from '../widgets/Favorites';
 
 function Main({ onLoginSuccess }) {
-    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-    const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [weatherData, setWeatherData] = useState(null);
-    const [error, setError] = useState('');
+    const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // 로그인 모달 열림 여부
+    const [isJoinModalOpen, setIsJoinModalOpen] = useState(false); // 회원가입 모달 열림 여부
+    const [loggedIn, setLoggedIn] = useState(false); // 로그인 상태
+    const [weatherData, setWeatherData] = useState(null); // 날씨 데이터
+    const [error, setError] = useState(''); // 에러 메시지
     const [latitude, setLatitude] = useState(33.4996); // 제주도 위도
     const [longitude, setLongitude] = useState(126.5312); // 제주도 경도
     const [username, setUsername] = useState(''); // 로그인한 사용자 이름
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // 페이지 이동을 위한 hook
 
+    // 로그인 모달 토글 함수
     const toggleLoginModal = () => {
         setIsLoginModalOpen(!isLoginModalOpen);
     };
 
+    // 회원가입 모달 토글 함수
     const toggleJoinModal = () => {
         setIsJoinModalOpen(!isJoinModalOpen);
     };
 
+    // 로그인 성공 시 호출되는 함수
     const handleLoginSuccess = async (loggedInUsername) => {
         setLoggedIn(true);
         setUsername(loggedInUsername);
@@ -39,7 +43,7 @@ function Main({ onLoginSuccess }) {
             console.log(`Fetching weather data for city: ${city}`);
             const data = await getWeatherData(city);
             setWeatherData(data);
-            setError(''); // Clear any previous error
+            setError(''); // 이전 에러 메시지 제거
         } catch (error) {
             console.error('Failed to fetch weather data:', error);
 
@@ -56,8 +60,8 @@ function Main({ onLoginSuccess }) {
         navigate('/');
     };
 
+    // 초기화 작업 (예: 현재 위치의 날씨 정보 가져오기)
     useEffect(() => {
-        // 초기화 작업 (예: 현재 위치의 날씨 정보 가져오기)
         const fetchInitialWeatherData = async () => {
             if (loggedIn) {
                 const city = 'Jeju'; // 예시 도시 설정
@@ -76,102 +80,46 @@ function Main({ onLoginSuccess }) {
     }, [loggedIn]);
 
     return (
-        <div className="Main">
-            <video autoPlay loop muted className="video-background">
-                <source src="/videos/surfing.mp4" type="video/mp4" />
-            </video>
-            <div className="content">
-                {!loggedIn && (
-                    <h1>Welcome to SurFun</h1>
-                )}
-
-                {loggedIn && (
-                    <>
-                        {error && (
-                            <p style={{ color: 'red' }}>{error}</p>
-                        )}
-
-                        {weatherData && (
-                            <WeatherDisplay weatherData={weatherData} />
-                        )}
-
-                        <div className="map-container">
-                            <MapView latitude={latitude} longitude={longitude} />
-                        </div>
-
-                        {/* 추가 콘텐츠 및 기능 */}
-                        <section>
-                            <h2>추천 서핑 포인트</h2>
-                            {/* 추천 서핑 포인트를 표시하는 컴포넌트 */}
-                        </section>
-                        <section>
-                            <h2>커뮤니티 활동</h2>
-                            {/* 커뮤니티 게시판을 표시하는 컴포넌트 */}
-                        </section>
-                        <section>
-                            <h2>서핑 교육 및 가이드</h2>
-                            {/* 서핑 강좌 및 안전 가이드를 표시하는 컴포넌트 */}
-                        </section>
-                        <section>
-                            <h2>최신 서핑 뉴스 및 정보</h2>
-                            {/* 최신 서핑 뉴스 및 정보를 표시하는 컴포넌트 */}
-                        </section>
-                    </>
-                )}
-
-                {isLoginModalOpen && (
-                    <div style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <div style={{
-                            backgroundColor: 'white',
-                            padding: '20px',
-                            borderRadius: '5px',
-                            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
-                        }}>
-                            <LoginModal 
-                                onLoginSuccess={handleLoginSuccess}
-                            />
-                        </div>
+        <>
+            <div className="Main">
+                {/* 비디오 배경 컨테이너 */}
+                <div className="video-container">
+                    <video autoPlay loop muted className="video-background">
+                        <source src="/videos/surfing.mp4" type="video/mp4" />
+                    </video>
+                    {/* 환영 메시지 */}
+                    <div className="welcome-message">
+                        <h1>Welcome to SurFun</h1>
                     </div>
-                )}
+                    {/* 즐겨찾기 컴포넌트 */}
+                    <Favorites />
+                </div>
 
-                {isJoinModalOpen && (
-                    <div style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <div style={{
-                            backgroundColor: 'white',
-                            padding: '20px',
-                            borderRadius: '5px',
-                            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)'
-                        }}>
-                            <JoinModal 
-                                onJoinSuccess={() => {
-                                    setIsJoinModalOpen(false);
-                                }}
-                            />
-                        </div>
-                    </div>
-                )}
+                {/* 메인 컨텐츠 */}
+                <div className="content">
+                    {!loggedIn && (
+                        <h1></h1>
+                    )}
+
+                    {loggedIn && (
+                        <>
+                            {error && (
+                                <p style={{ color: 'red' }}>{error}</p>
+                            )}
+
+                            {weatherData && (
+                                <WeatherDisplay weatherData={weatherData} />
+                            )}
+
+                            {/* 지도 컨테이너 */}
+                            <div className="map-container">
+                                <MapView latitude={latitude} longitude={longitude} />
+                            </div>
+                        </>
+                    )}
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 

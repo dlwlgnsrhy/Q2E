@@ -28,15 +28,15 @@ function Header({ loggedIn, username, toggleJoinModal, toggleLoginModal }) {
                         <button onClick={() => handleNavigation('/community')}>Community</button>
                     </li>
                     <li style={{ margin: '0 10px' }}>
-                        <button onClick={() => handleNavigation('/profile')}>Profile</button>
+                        <button  onClick={() => handleNavigation('/profile')}>Profile</button>
                     </li>
                     {!loggedIn && (
                         <>
                             <li style={{ margin: '0 10px' }}>
-                                <button onClick={toggleJoinModal}>회원가입</button>
+                                <button className='black-button' onClick={toggleJoinModal}>회원가입</button>
                             </li>
                             <li style={{ margin: '0 10px' }}>
-                                <button onClick={toggleLoginModal}>로그인</button>
+                                <button className='black-button' onClick={toggleLoginModal}>로그인</button>
                             </li>
                         </>
                     )}
